@@ -27,7 +27,6 @@
             overflow-x: hidden;
         }
 
-        /* Logo & Header */
         .main-logo {
             position: absolute;
             top: 25px;
@@ -38,7 +37,6 @@
             transition: 0.5s;
         }
         
-        /* Floating Admin Button - Desktop Optimization */
         #admin-btn {
             display: none;
             position: fixed;
@@ -60,7 +58,6 @@
         }
         #admin-btn:hover { background: #ff4757; transform: scale(1.05); color: white; }
 
-        /* Welcome Page Hero */
         #welcome-page {
             height: 100vh;
             display: flex;
@@ -73,7 +70,7 @@
 
         .hero-title {
             font-family: 'Montserrat', sans-serif;
-            font-size: clamp(3rem, 12vw, 6rem); /* Lebih besar di laptop */
+            font-size: clamp(3rem, 12vw, 6rem);
             background: linear-gradient(to bottom, #fff 40%, var(--neon));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -82,7 +79,6 @@
             margin-bottom: 10px;
         }
 
-        /* Card Layout for Desktop (3 Columns) */
         .card-rank {
             background: var(--glass);
             backdrop-filter: blur(20px);
@@ -103,7 +99,6 @@
             box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 30px rgba(0,210,255,0.1);
         }
 
-        /* Custom Button */
         .btn-main {
             background: linear-gradient(45deg, #0072ff, #00d2ff);
             border: none;
@@ -118,7 +113,6 @@
         }
         .btn-main:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,210,255,0.5); }
 
-        /* Modal Desktop Size */
         .modal-content {
             background: rgba(10,20,40,0.98);
             backdrop-filter: blur(25px);
@@ -126,11 +120,19 @@
             border-radius: 35px;
         }
 
-        /* SweetAlert Custom for Desktop */
         .swal2-popup-custom {
             background: #0a1428 !important;
             border: 1px solid var(--neon) !important;
             border-radius: 25px !important;
+            color: white !important;
+        }
+
+        .qris-box {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 15px 0;
+            display: inline-block;
         }
     </style>
 </head>
@@ -138,7 +140,7 @@
 
     <img src="https://files.catbox.moe/88zycr.png" class="main-logo animate__animated animate__fadeInDown" alt="Logo">
 
-    <a href="https://wa.me/6281234567890?text=Halo%20Admin%20Prime%20Horizon%2C%20saya%20butuh%20bantuan" id="admin-btn" target="_blank">
+    <a href="https://wa.me/6283129480910?text=Halo%20Admin%2C%20saya%20sudah%20melakukan%20pembayaran" id="admin-btn" target="_blank">
         🚨 LAPOR ADMIN
     </a>
 
@@ -198,7 +200,8 @@
     </div>
 
     <script>
-        const WA_ADMIN = "6281234567890"; 
+        // UPDATE: NOMOR HP TUJUAN
+        const NO_PEMBAYARAN = "083129480910";
         let pNama = "", pHarga = "";
 
         const ranks = [
@@ -252,17 +255,21 @@
 
             bootstrap.Modal.getInstance(document.getElementById('modalBeli')).hide();
 
+            // MUNCULKAN BARCODE DAN NOMOR HP
             Swal.fire({
-                title: 'Membuka Pembayaran',
-                text: 'Silahkan selesaikan transaksi di aplikasi ' + payMethod,
+                title: 'Scan Untuk Bayar',
+                html: `
+                    <div class="qris-box">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://wa.me/6283129480910" alt="QRIS" style="width:100%">
+                    </div>
+                    <p class="mb-1">Tujuan: <b>${payMethod}</b></p>
+                    <h4 class="text-info fw-bold">${NO_PEMBAYARAN}</h4>
+                    <p class="small opacity-75">Silahkan transfer <b>Rp ${pHarga}</b> ke nomor di atas.<br>Setelah itu, klik <b>LAPOR ADMIN</b> di pojok kiri bawah.</p>
+                `,
                 icon: 'info',
-                timer: 3000,
-                showConfirmButton: false,
+                confirmButtonText: 'SAYA SUDAH BAYAR',
                 customClass: { popup: 'swal2-popup-custom' }
             });
-
-            let link = payMethod === "DANA" ? "dana://" : payMethod === "GOPAY" ? "gojek://gopay" : "ovo://";
-            setTimeout(() => { window.location.href = link; }, 2000);
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
