@@ -1,105 +1,17 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EB | Cyber-Tech Studio</title>
-    <style>
-        /* TEMA: MIDNIGHT CYBER-TECH */
-        :root {
-            --bg: #050508;
-            --card-bg: #0d0d12;
-            --accent-cyan: #00f2ff;
-            --accent-purple: #9d4edd;
-            --text: #e2e8f0;
-            --text-dim: #64748b;
-            --border: #1e293b;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg); color: var(--text); padding-top: 80px; }
-        
-        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 25px; margin-bottom: 20px; }
-        
-        /* SISTEM KREATOR */
-        .creator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .creator-chip { border: 1px solid var(--border); padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
-        .creator-chip:hover, .creator-chip.selected { border-color: var(--accent-cyan); background: rgba(0, 242, 255, 0.05); }
-        .creator-name { font-weight: 800; font-size: 14px; color: #fff; }
-        .creator-desc { font-size: 10px; color: var(--text-dim); margin-top: 4px; line-height: 1.2; }
-
-        /* COUNTER */
-        .row-calc { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 10px; border-bottom: 1px solid var(--border); }
-        .counter-btn { width: 35px; height: 35px; background: var(--border); border: none; color: #fff; border-radius: 8px; cursor: pointer; }
-    </style>
-</head>
-<body>
-
-<div id="page-custom" class="card" style="max-width: 600px; margin: auto;">
-    <h2 style="margin-bottom: 20px;">Custom Request</h2>
-
-    <div id="creatorArea">
-        <span style="font-size: 12px; font-weight: 700; color: var(--accent-purple);">Pilih Arsitek Preset:</span>
-        <div class="creator-grid">
-            <div class="creator-chip" onclick="selectCreator(this, 'Hiro Wangyy')">
-                <div class="creator-name">Hiro Wangyy</div>
-                <div class="creator-desc">Mastering velocity flow & cinematic atmosphere.</div>
-            </div>
-            <div class="creator-chip" onclick="selectCreator(this, 'Frii Wangyy')">
-                <div class="creator-name">Frii Wangyy</div>
-                <div class="creator-desc">Beat sync king for high-energy transitions.</div>
-            </div>
-            <div class="creator-chip" onclick="selectCreator(this, 'DanNewbie')">
-                <div class="creator-name">DanNewbie</div>
-                <div class="creator-desc">Pro-level results for beginner editors.</div>
-            </div>
-            <div class="creator-chip" onclick="selectCreator(this, 'Belum ada')">
-                <div class="creator-name">Belum ada</div>
-                <div class="creator-desc">Expanding workspace, new talents incoming.</div>
-            </div>
+<div class="creator-selection-area" id="creatorArea" style="display: block;">
+    <span style="font-size: 12px; font-weight: 700; color: #fff;">Pilih Arsitek Preset Kreator:</span>
+    <div class="creator-select-grid">
+        <div class="creator-chip" onclick="selectCreator(this, 'Hiro Wangyy')">
+            <strong>Hiro Wangyy</strong><br><small>Master of Cinematic Flow & Velocity</small>
+        </div>
+        <div class="creator-chip" onclick="selectCreator(this, 'Frii Wangyy')">
+            <strong>Frii Wangyy</strong><br><small>High-Energy Beat Sync Specialist</small>
+        </div>
+        <div class="creator-chip" onclick="selectCreator(this, 'DanNewbie')">
+            <strong>DanNewbie</strong><br><small>Pro-level templates for Beginners</small>
+        </div>
+        <div class="creator-chip" onclick="selectCreator(this, 'Belum ada')">
+            <strong>Belum ada</strong><br><small>New rising talent coming soon</small>
         </div>
     </div>
-
-    <div style="margin-top: 25px;">
-        <div class="row-calc">
-            <span>Video (Rp 3k/vid)</span>
-            <div>
-                <button class="counter-btn" onclick="update('v', -1)">-</button>
-                <span id="qtyV" style="margin: 0 15px;">1</span>
-                <button class="counter-btn" onclick="update('v', 1)">+</button>
-            </div>
-        </div>
-        <div class="row-calc">
-            <span>Foto (Rp 1k/foto)</span>
-            <div>
-                <button class="counter-btn" onclick="update('f', -1)">-</button>
-                <span id="qtyF" style="margin: 0 15px;">0</span>
-                <button class="counter-btn" onclick="update('f', 1)">+</button>
-            </div>
-        </div>
-    </div>
-
-    <h3 style="text-align: right; margin-top: 20px;">Total: <span id="totalPrice" style="color: var(--accent-cyan);">Rp 0</span></h3>
 </div>
-
-<script>
-    let vCount = 1, fCount = 0;
-    
-    function update(type, delta) {
-        if(type === 'v') { vCount = Math.max(1, vCount + delta); document.getElementById('qtyV').innerText = vCount; }
-        else { fCount = Math.max(0, fCount + delta); document.getElementById('qtyF').innerText = fCount; }
-        calc();
-    }
-
-    function selectCreator(el, name) {
-        document.querySelectorAll('.creator-chip').forEach(c => c.classList.remove('selected'));
-        el.classList.add('selected');
-    }
-
-    function calc() {
-        let total = (vCount * 3000) + (fCount * 1000);
-        document.getElementById('totalPrice').innerText = "Rp " + total.toLocaleString();
-    }
-    calc();
-</script>
-</body>
-</html>
