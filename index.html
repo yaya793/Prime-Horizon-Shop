@@ -3,149 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EB | EditorBase Premium Studio</title>
+    <title>EB | EditorBase Premium</title>
     <style>
-        /* CORE DESIGN SYSTEM (CYBER NEON THEME) */
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
+        /* CORE DESIGN SYSTEM (MIDNIGHT AMETHYST & CRIMSON PULSE) */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
         
         :root {
-            --bg-dark: #04060a;
-            --glass-card: rgba(8, 12, 24, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.05);
-            --primary: #00f0ff;
-            --primary-glow: rgba(0, 240, 255, 0.35);
-            --accent: #bd00ff;
-            --accent-glow: rgba(189, 0, 255, 0.25);
-            --text-main: #f1f5f9;
-            --text-dim: #64748b;
+            --bg-main: #020204;
+            --glass-card: rgba(10, 6, 18, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.04);
+            --primary: #cf1b42; /* Crimson Pulse */
+            --primary-glow: rgba(207, 27, 66, 0.35);
+            --accent: #9d4edd; /* Amethyst Neon */
+            --accent-glow: rgba(157, 78, 221, 0.3);
+            --text-main: #f3f4f6;
+            --text-dim: #94a3b8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         
         body { 
-            background-color: var(--bg-dark); 
+            background-color: var(--bg-main); 
             color: var(--text-main); 
             overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% 0%, rgba(189, 0, 255, 0.07), transparent 50%),
-                              radial-gradient(circle at 0% 100%, rgba(0, 240, 255, 0.05), transparent 40%);
+            background-image: radial-gradient(circle at 100% 0%, rgba(157, 78, 221, 0.08), transparent 45%),
+                              radial-gradient(circle at 0% 100%, rgba(207, 27, 66, 0.06), transparent 45%);
             background-attachment: fixed;
-            padding-top: 80px; /* Jarak agar konten tidak tertutup Sticky Header */
+            padding-top: 80px; 
         }
 
-        /* 1. STICKY NAVIGATION HEADER (ANTI-HILANG SAAT DI-SCROLL) */
+        /* STICKY TOP NAVIGATION BAR */
         .sticky-header {
-            position: fixed; top: 0; left: 0; width: 100%; height: 65px;
-            background: rgba(4, 6, 10, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 70px;
+            background: rgba(2, 2, 4, 0.75); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             border-bottom: 1px solid var(--glass-border); z-index: 9999;
-            display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.6);
         }
         .header-btn {
             background: transparent; border: 1px solid var(--glass-border); color: var(--text-main);
-            padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;
-            transition: 0.2s; display: flex; align-items: center; gap: 5px;
+            padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 13px;
+            transition: 0.2s; display: flex; align-items: center; gap: 6px;
         }
-        .header-btn:hover { border-color: var(--primary); color: var(--primary); box-shadow: 0 0 10px var(--primary-glow); }
-        .header-brand { font-size: 22px; font-weight: 900; letter-spacing: -1px; text-shadow: 0 0 10px var(--primary-glow); }
-        .header-brand span { color: var(--primary); }
+        .header-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+        .header-brand { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+        .header-brand span { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
         
         /* SIDEBAR DRAWER MENU GARIS 3 */
         .menu-drawer {
             position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
-            background: #060913; border-left: 1px solid var(--glass-border); z-index: 10000;
+            background: #07050d; border-left: 1px solid var(--glass-border); z-index: 10000;
             padding: 30px 20px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
         }
         .menu-drawer.open { right: 0; }
         .drawer-close { text-align: right; font-size: 24px; cursor: pointer; color: var(--text-dim); margin-bottom: 30px; }
-        .drawer-close:hover { color: #fff; }
         .drawer-link { display: block; padding: 14px; color: #fff; text-decoration: none; font-weight: 600; border-radius: 10px; margin-bottom: 10px; background: rgba(255,255,255,0.01); }
-        .drawer-link:hover { background: var(--primary); color: #000; }
+        .drawer-link:hover { background: var(--accent); color: #000; }
 
         /* MULTI-COLUMN LAYOUT STRUCTURE */
         .page-section { display: none; padding: 20px; max-width: 1200px; margin: auto; animation: fadeUp 0.4s ease-out; }
         .active-page { display: block; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .workspace-grid { display: grid; grid-template-columns: 1fr 2.5fr; gap: 25px; align-items: start; margin-top: 15px; }
+        .workspace-grid { display: grid; grid-template-columns: 1fr 2.3fr; gap: 25px; align-items: start; margin-top: 15px; }
         .sidebar-info { display: flex; flex-direction: column; gap: 20px; }
 
-        /* PREMIUM CARDS GLASSMORPHISM */
+        /* PREMIUM GLASSMORPHISM CARDS */
         .card { 
-            background: var(--glass-card); border: 1px solid var(--glass-border); border-radius: 20px; 
-            padding: 25px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+            background: var(--glass-card); border: 1px solid var(--glass-border); border-radius: 24px; 
+            padding: 25px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
         }
 
-        /* INFORMASI EDUKASI BIAR GA KOSONG */
-        .edu-box { background: rgba(0, 240, 255, 0.01); border-left: 3px solid var(--primary); padding: 14px; border-radius: 0 12px 12px 0; margin-bottom: 15px; border-top: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); }
-        .edu-box h5 { color: var(--primary); font-size: 13px; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; }
+        /* INFORMASI EDUKASI */
+        .edu-box { background: rgba(157, 78, 221, 0.01); border-left: 3px solid var(--accent); padding: 14px; border-radius: 0 12px 12px 0; margin-bottom: 15px; border-top: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); }
+        .edu-box h5 { color: var(--accent); font-size: 13px; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; }
         .edu-box p { font-size: 13px; color: var(--text-dim); line-height: 1.4; }
 
         /* BUTTON SYSTEM */
-        .btn { display: block; width: 100%; padding: 15px; border-radius: 12px; font-weight: 700; text-align: center; cursor: pointer; transition: 0.2s; border: none; font-size: 15px; }
-        .btn-primary { background: linear-gradient(90deg, var(--primary), #00bcff); color: #000; box-shadow: 0 0 15px var(--primary-glow); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 25px rgba(0, 240, 255, 0.5); }
+        .btn { display: block; width: 100%; padding: 15px; border-radius: 14px; font-weight: 700; text-align: center; cursor: pointer; transition: 0.2s; border: none; font-size: 14px; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), #a61232); color: #fff; box-shadow: 0 0 15px var(--primary-glow); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 25px rgba(207, 27, 66, 0.5); }
         .btn-outline { background: transparent; border: 1px solid var(--glass-border); color: var(--text-main); }
-        .btn-outline:hover { border-color: var(--primary); color: var(--primary); background: rgba(0,240,255,0.02); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: rgba(157,78,221,0.02); }
 
-        .title { font-size: 30px; font-weight: 900; margin-bottom: 5px; text-transform: uppercase; letter-spacing: -0.5px; }
-        .title span { color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); }
+        .title { font-size: 28px; font-weight: 800; margin-bottom: 5px; letter-spacing: -0.5px; }
+        .title span { color: var(--accent); text-shadow: 0 0 15px var(--accent-glow); }
 
-        /* INFINITE IMAGE SLIDER AUTOMATIC */
-        .slider-container { width: 100%; height: 240px; overflow: hidden; border-radius: 16px; border: 1px solid var(--glass-border); position: relative; margin-bottom: 20px; }
+        /* AUTOMATIC SLIDER */
+        .slider-container { width: 100%; height: 230px; overflow: hidden; border-radius: 20px; border: 1px solid var(--glass-border); position: relative; margin-bottom: 20px; }
         .slider-track { display: flex; width: 300%; height: 100%; animation: slideLoop 10s infinite ease-in-out; }
         .slide { width: 33.333%; height: 100%; background-size: cover; background-position: center; display: flex; align-items: flex-end; }
-        .slide-overlay { background: linear-gradient(transparent, rgba(4,6,10,0.95)); width: 100%; padding: 20px; font-weight: 600; font-size: 14px; }
+        .slide-overlay { background: linear-gradient(transparent, rgba(2,2,4,0.95)); width: 100%; padding: 20px; font-weight: 600; font-size: 13px; }
         @keyframes slideLoop { 0%, 28% { transform: translateX(0); } 33%, 61% { transform: translateX(-33.333%); } 66%, 94% { transform: translateX(-66.666%); } 100% { transform: translateX(0); } }
 
-        /* TAB KATALOG */
+        /* KATALOG PRESET COMPONENTS */
         .tab-container { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 20px; }
-        .tab-btn { padding: 8px 16px; background: transparent; border: 1px solid var(--glass-border); border-radius: 30px; color: var(--text-dim); cursor: pointer; white-space: nowrap; font-weight: 600; font-size: 13px; }
-        .tab-btn.active, .tab-btn:hover { background: var(--primary); color: #000; border-color: var(--primary); }
+        .tab-btn { padding: 8px 16px; background: transparent; border: 1px solid var(--glass-border); border-radius: 30px; color: var(--text-dim); cursor: pointer; white-space: nowrap; font-weight: 700; font-size: 13px; }
+        .tab-btn.active, .tab-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
 
         .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 15px; }
-        .preset-item { background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); border-radius: 16px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
+        .preset-item { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; }
 
-        /* GRID PEMILIHAN STYLE DAN DYNAMIC CREATOR BOX */
-        .style-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px; }
-        .style-card { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 12px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .style-card.active { border-color: var(--primary); background: rgba(0, 240, 255, 0.02); box-shadow: 0 0 15px var(--primary-glow) inset; }
-        .style-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+        /* STYLE UTAMA GRID */
+        .style-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .style-card { background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); border-radius: 14px; padding: 16px 10px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .style-card.active { border-color: var(--accent); background: rgba(157, 78, 221, 0.03); box-shadow: 0 0 15px var(--accent-glow) inset; }
+        .style-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
         .style-card p { font-size: 11px; color: var(--text-dim); }
 
-        /* Pop-up Info Kreator Di Bawah Klik Kartu */
-        .creator-showcase-box {
-            background: linear-gradient(90deg, rgba(189, 0, 255, 0.05), rgba(0, 240, 255, 0.05));
-            border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 12px; padding: 12px 15px;
-            margin-bottom: 20px; display: flex; align-items: center; gap: 10px; animation: glowPulse 2s infinite alternate;
-        }
-        @keyframes glowPulse { from { border-color: rgba(0, 240, 255, 0.2); } to { border-color: rgba(189, 0, 255, 0.4); } }
+        /* AREA SELEKSI KREATOR KANG PRESET LAIN (DINAMIS SENSASIONAL) */
+        .creator-selection-area { display: none; background: rgba(0,0,0,0.5); border: 1px dashed rgba(157, 78, 221, 0.3); padding: 15px; border-radius: 16px; margin-bottom: 20px; }
+        .creator-select-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-top: 10px; }
+        .creator-chip { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 10px; padding: 10px 5px; text-align: center; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text-dim); transition: 0.2s; }
+        .creator-chip.selected { border-color: var(--primary); color: #fff; background: rgba(207, 27, 66, 0.05); box-shadow: 0 0 10px var(--primary-glow); }
 
         /* COUNTER */
-        .counter-box { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 15px; border-radius: 14px; text-align: center; margin-bottom: 20px; }
-        .counter-controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border-radius: 10px; padding: 4px; max-width: 200px; margin: 10px auto 0 auto; }
-        .c-btn { background: transparent; border: none; color: var(--primary); font-size: 22px; width: 40px; height: 40px; cursor: pointer; font-weight: 700; }
+        .counter-box { background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 15px; border-radius: 16px; text-align: center; margin-bottom: 20px; }
+        .counter-controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border-radius: 12px; padding: 4px; max-width: 180px; margin: 10px auto 0 auto; }
+        .c-btn { background: transparent; border: none; color: var(--accent); font-size: 22px; width: 40px; height: 40px; cursor: pointer; font-weight: 700; }
         
-        .toggle-group { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 12px; margin-bottom: 10px; font-size: 14px; }
+        .toggle-group { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); border-radius: 14px; margin-bottom: 10px; font-size: 13px; }
         .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); border-radius: 34px; transition: .3s; }
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: #fff; border-radius: 50%; transition: .3s; }
         input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(22px); background-color: #000; }
+        input:checked + .slider:before { transform: translateX(22px); background-color: #fff; }
 
-        .price-display { text-align: center; font-size: 38px; font-weight: 900; margin: 25px 0; border-top: 1px dashed var(--glass-border); padding-top: 15px; }
+        .price-display { text-align: center; font-size: 36px; font-weight: 800; margin: 25px 0; border-top: 1px dashed var(--glass-border); padding-top: 15px; }
         .price-display span { font-size: 18px; color: var(--primary); }
 
-        .custom-input { width: 100%; padding: 14px; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); border-radius: 10px; color: white; font-size: 14px; outline: none; }
-        .custom-input:focus { border-color: var(--primary); }
+        .custom-input { width: 100%; padding: 14px; background: rgba(0,0,0,0.6); border: 1px solid var(--glass-border); border-radius: 12px; color: white; font-size: 14px; outline: none; }
+        .custom-input:focus { border-color: var(--accent); }
 
-        /* RESPONSIVE LAPTOP VS MOBILE ACCORDION */
         @media (max-width: 900px) {
             .workspace-grid { grid-template-columns: 1fr; }
             .sidebar-info { order: 2; }
-            .title { font-size: 24px; }
+            .title { font-size: 22px; }
         }
     </style>
 </head>
@@ -169,10 +164,10 @@
     <div id="page-home" class="page-section active-page">
         <div class="workspace-grid" style="grid-template-columns: 1fr 1.5fr;">
             
-            <div class="card" style="text-align: center;">
-                <div style="width: 85px; height: 85px; background: linear-gradient(45deg, var(--primary), var(--accent)); border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; color: #000; box-shadow: 0 0 20px var(--primary-glow);">EB</div>
-                <h2 style="font-size: 22px; margin-bottom: 5px;">EditorBase Studio</h2>
-                <p style="color: var(--text-dim); font-size: 13px; margin-bottom: 25px;">Platform Dagang Preset JJ & Jasa Edit @friiwangyy</p>
+            <div class="card" style="text-align: center; border-color: rgba(157, 78, 221, 0.15);">
+                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 20px; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; color: #fff; box-shadow: 0 0 20px var(--accent-glow);">EB</div>
+                <h2 style="font-size: 20px; margin-bottom: 5px;">EditorBase Studio</h2>
+                <p style="color: var(--text-dim); font-size: 13px; margin-bottom: 25px;">Platform Dagang Preset & Jasa Edit @friiwangyy</p>
                 
                 <button class="btn btn-primary" onclick="navToPage('page-katalog')" style="margin-bottom: 12px;">Katalog Preset Instan</button>
                 <button class="btn btn-outline" onclick="navToPage('page-custom')">Buat Custom Request</button>
@@ -181,14 +176,14 @@
             <div class="card">
                 <div class="slider-container">
                     <div class="slider-track">
-                        <div class="slide" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.9)), url('https://via.placeholder.com/800x400/080c18/fff?text=Slide+1+-[Soft+Spoken]')">
+                        <div class="slide" style="background-image: linear-gradient(transparent, rgba(2,2,4,0.95)), url('https://via.placeholder.com/800x400/0c0612/fff?text=Slide+1+-[Soft+Spoken]')">
                             <div class="slide-overlay">🎙️ Style Soft Spoken Estetik Alur Bicara</div>
                         </div>
-                        <div class="slide" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.9)), url('https://via.placeholder.com/800x400/120818/fff?text=Slide+2+-[Hyper+Kece]')">
-                            <div class="slide-overlay">⚡ Style Hyper-Kece 3D Berjalan Presisi</div>
+                        <div class="slide" style="background-image: linear-gradient(transparent, rgba(2,2,4,0.95)), url('https://via.placeholder.com/800x400/12060a/fff?text=Slide+2+-[Hyper+Kece]')">
+                            <div class="slide-overlay">⚡ Style Kece Smooth 3D Berjalan Presisi</div>
                         </div>
-                        <div class="slide" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.9)), url('https://via.placeholder.com/800x400/081812/fff?text=Slide+3+-[Hardcore+Brutal]')">
-                            <div class="slide-overlay">🔥 Style Hardcore Brutal Full Shake FX</div>
+                        <div class="slide" style="background-image: linear-gradient(transparent, rgba(2,2,4,0.95)), url('https://via.placeholder.com/800x400/060c12/fff?text=Slide+3+-[Hardcore+Brutal]')">
+                            <div class="slide-overlay">🔥 Style Brutal Full Shake Kecepatan Tinggi</div>
                         </div>
                     </div>
                 </div>
@@ -209,7 +204,7 @@
 
     <div id="page-katalog" class="page-section">
         <h2 class="title">Katalog <span>Preset</span></h2>
-        <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 15px;">Daftar template siap pakai impor instan langsung ke Alight Motion.</p>
+        <p style="color: var(--text-dim); font-size: 13px; margin-bottom: 15px;">Daftar template siap pakai impor instan langsung ke Alight Motion.</p>
         
         <div class="workspace-grid">
             <div class="sidebar-info">
@@ -233,8 +228,7 @@
                     <button class="tab-btn" onclick="filterPreset('Kece', this)">Kece</button>
                     <button class="tab-btn" onclick="filterPreset('Brutal', this)">Brutal</button>
                 </div>
-                <div class="preset-grid" id="presetList">
-                    </div>
+                <div class="preset-grid" id="presetList"></div>
             </div>
         </div>
     </div>
@@ -242,7 +236,7 @@
 
     <div id="page-custom" class="page-section">
         <h2 class="title">Custom <span>Request</span></h2>
-        <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 15px;">Kalkulator Jasa Edit Video Manual Berdasarkan Jumlah Bahan.</p>
+        <p style="color: var(--text-dim); font-size: 13px; margin-bottom: 15px;">Kalkulator Jasa Edit Video Manual Berdasarkan Jumlah Bahan.</p>
         
         <div class="workspace-grid">
             <div class="sidebar-info">
@@ -250,7 +244,7 @@
                     <h3 style="font-size: 15px; margin-bottom: 12px;">🛠️ Info Jasa Custom</h3>
                     <div class="edu-box">
                         <h5>💸 Skema Harga</h5>
-                        <p>Sistem hitungan flat hemat Rp 3.000 untuk per 1 video bahan baku yang kamu kumpulkan ke admin.</p>
+                        <p>Sistem hitungan hemat flat senilai Rp 3.000 untuk setiap 1 video bahan utama yang kamu berikan ke tim editor.</p>
                     </div>
                     <div class="edu-box">
                         <h5>🔗 Kegunaan Tautan</h5>
@@ -264,39 +258,37 @@
             </div>
 
             <div class="card">
-                <span style="font-size: 14px; font-weight: 700; display: block; margin-bottom: 10px;">1. Pilih Style & Creator Preset</span>
+                <span style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 10px; color: var(--accent);">1. Pilih Style Video</span>
                 <div class="style-grid">
-                    <div class="style-card active" onclick="selectStyle(this, 5000, 'Soft Spoken', 'Nama Creator 1')">
+                    <div class="style-card active" onclick="selectStyle(this, 5000, 'Soft Spoken', false)">
                         <h4>Soft Spoken</h4>
                         <p>+Rp 5.000</p>
                     </div>
-                    <div class="style-card" onclick="selectStyle(this, 10000, 'Kece Style', 'Nama Creator 2')">
-                        <h4>Kece Style</h4>
+                    <div class="style-card" onclick="selectStyle(this, 10000, 'Kece', false)">
+                        <h4>Kece</h4>
                         <p>+Rp 10.000</p>
                     </div>
-                    <div class="style-card" onclick="selectStyle(this, 15000, 'Brutal Full FX', 'Nama Creator 3')">
-                        <h4>Brutal Full FX</h4>
+                    <div class="style-card" onclick="selectStyle(this, 15000, 'Brutal', false)">
+                        <h4>Brutal</h4>
                         <p>+Rp 15.000</p>
                     </div>
-                    <div class="style-card" onclick="selectStyle(this, 20000, 'Kang Preset V4', 'Nama Creator 4')">
-                        <h4>Kang Preset V4</h4>
+                    <div class="style-card" id="btnStyleLain" onclick="selectStyle(this, 20000, 'Style Kreator Lain', true)">
+                        <h4>Style Kreator Lain</h4>
                         <p>+Rp 20.000</p>
                     </div>
-                    <div class="style-card" onclick="selectStyle(this, 25000, 'Kang Preset V5', 'Nama Creator 5')">
-                        <h4>Kang Preset V5</h4>
-                        <p>+Rp 25.000</p>
+                </div>
+
+                <div class="creator-selection-area" id="creatorArea">
+                    <span style="font-size: 12px; font-weight: 700; color: #fff;">Pilih Arsitek Preset Kreator:</span>
+                    <div class="creator-select-grid">
+                        <div class="creator-chip selected" onclick="selectCreator(this, 'Kang Preset 1')">Kang Preset 1</div>
+                        <div class="creator-chip" onclick="selectCreator(this, 'Kang Preset 2')">Kang Preset 2</div>
+                        <div class="creator-chip" onclick="selectCreator(this, 'Kang Preset 3')">Kang Preset 3</div>
+                        <div class="creator-chip" onclick="selectCreator(this, 'Kang Preset 4')">Kang Preset 4</div>
                     </div>
                 </div>
 
-                <div class="creator-showcase-box" id="creatorBox">
-                    <span style="font-size: 18px;">👤</span>
-                    <div>
-                        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Arsitek Preset Asli</div>
-                        <div style="font-size: 14px; font-weight: 700; color: #fff;" id="creatorNameDisplay">Nama Creator 1</div>
-                    </div>
-                </div>
-
-                <span style="font-size: 14px; font-weight: 700; display: block; margin-bottom: 5px;">2. Jumlah Video Bahan (Rp 3.000 / Video)</span>
+                <span style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 5px;">2. Jumlah Video Bahan (Rp 3.000 / Video)</span>
                 <div class="counter-box">
                     <div class="counter-controls">
                         <button class="c-btn" onclick="updateVideoCount(-1)">-</button>
@@ -305,9 +297,9 @@
                     </div>
                 </div>
 
-                <span style="font-size: 14px; font-weight: 700; display: block; margin-bottom: 10px;">3. Modifikasi FX Ekstra</span>
+                <span style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 10px;">3. Modifikasi Tambahan</span>
                 <div class="toggle-group">
-                    <span>Gunakan Gerakan 3D Perputaran Kamera (+10k)</span>
+                    <span>Gunakan Pergerakan Kamera 3D (+10k)</span>
                     <label class="switch">
                         <input type="checkbox" id="c_3d" onchange="calculateCustomPrice()">
                         <span class="slider"></span>
@@ -321,8 +313,8 @@
                     </label>
                 </div>
 
-                <span style="font-size: 14px; font-weight: 700; display: block; margin-top: 15px; margin-bottom: 10px;">4. Link Referensi Video / Sound Reff</span>
-                <input type="text" id="c_ref_link" class="custom-input" placeholder="Tempel link sound TikTok / tautan drive bahan video...">
+                <span style="font-size: 13px; font-weight: 700; display: block; margin-top: 15px; margin-bottom: 10px;">4. Tautan Contoh / Referensi Sound</span>
+                <input type="text" id="c_ref_link" class="custom-input" placeholder="Tempel link sound TikTok atau berkas drive...">
 
                 <div class="price-display" id="displayCustomPrice"><span>Rp</span> 0</div>
 
@@ -335,10 +327,10 @@
     <div id="page-checkout" class="page-section">
         <h2 class="title">Form <span>Data Diri</span></h2>
         <div class="card" style="max-width: 600px; margin: auto;">
-            <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border);">
+            <div style="background: rgba(255,255,255,0.01); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border);">
                 <p style="color:var(--text-dim); font-size:12px;">Rincian Pilihan:</p>
-                <h4 id="checkoutItemName" style="color:#fff; font-size:15px; margin-bottom:5px;">Custom Project</h4>
-                <h2 id="checkoutFinalPrice" style="color:var(--primary); font-size:22px;">Rp 0</h2>
+                <h4 id="checkoutItemName" style="color:#fff; font-size:14px; margin-bottom:5px;">Custom Project</h4>
+                <h2 id="checkoutFinalPrice" style="color:var(--accent); font-size:22px;">Rp 0</h2>
             </div>
             
             <div style="margin-bottom: 15px;">
@@ -359,43 +351,38 @@
         <h2 class="title" style="text-align: center;">Scan <span>QRIS</span></h2>
         <div class="card" style="max-width: 450px; margin: auto; text-align: center;">
             <div class="qris-wrapper">
-                <div class="qris-frame">
+                <div style="background: white; padding: 10px; border-radius: 16px; display: inline-block; margin-bottom: 15px;">
                     <div style="width:200px; height:200px; background:#d0d0d0; display:flex; align-items:center; justify-content:center; color:#111; font-weight:bold; font-size:12px;">FOTO QRIS RESMI EB</div>
                 </div>
-                <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 5px;" id="paymentFinalPrice">Rp 0</h2>
-                <div style="background:rgba(255, 71, 87, 0.1); padding:6px 20px; border-radius:20px; color:#ff4757; font-weight:700; margin-bottom:20px;" id="countdownTimer">15:00</div>
+                <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 5px;" id="paymentFinalPrice">Rp 0</h2>
+                <div style="background:rgba(207, 27, 66, 0.1); padding:6px 20px; border-radius:20px; color:var(--primary); font-weight:700; margin-bottom:20px; display:inline-block;" id="countdownTimer">15:00</div>
                 <button class="btn btn-primary" onclick="alert('Mengalihkan ke WhatsApp Admin untuk validasi...')">Kirim Bukti Bayar Ke WA</button>
             </div>
         </div>
     </div>
 
     <script>
-        // DATA PRESET LENGKAP DENGAN FUNGSI NYATA
         const presets = [
             { nama: "XML Soft Spoken Velocity v1", kategori: "Soft", harga: 15000, guna: "Fungsi: Transisi slowmo super halus, COCOK untuk klip jeda bicara bertema sedih/bercerita." },
             { nama: "Preset Kece Style 3D Rapi", kategori: "Kece", harga: 22000, guna: "Fungsi: Menambahkan ruang rotasi 3D berlapis neon, COCOK untuk pamer profil game kesayangan." },
-            { nama: "Brutal Shake Full Bass Distortion", kategori: "Brutal", harga: 25000, guna: "Fungsi: Efek guncangan ekstrem pas ketukan bass drum keras, COCOK untuk klip kompilasi kill." }
+            { nama: "Brutal Shake Full Bass Distortion", kategori: "Brutal", harga: 25000, guna: "Fungsi: Efek guncangan ekstrem pas ketukan bass drum keras, COCOK untuk klip kompilasi." }
         ];
 
-        // RIWAYAT NAVIGASI UNTUK FUNGSI TOMBOL BACK
         let pageHistory = ['page-home'];
-        
         let baseStylePrice = 5000;
         let selectedStyleName = 'Soft Spoken';
         let currentCustomPrice = 0;
+        let selectedCreatorName = 'Kang Preset 1'; 
 
-        // BUKA TUTUP DRAWER MENU KANAN
         function toggleDrawer() {
             document.getElementById('menuDrawer').classList.toggle('open');
         }
 
-        // NAVIGASI HALAMAN & PENCATATAN HISTORI BACK
         function navToPage(pageId) {
             document.getElementById('menuDrawer').classList.remove('open');
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active-page'));
             document.getElementById(pageId).classList.add('active-page');
             
-            // Sembunyikan tombol back jika berada di beranda utama
             document.getElementById('globalBackBtn').style.visibility = (pageId === 'page-home') ? 'hidden' : 'visible';
             
             if (pageHistory[pageHistory.length - 1] !== pageId) {
@@ -404,20 +391,16 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // FUNGSI TOMBOL BACK POJOK KIRI ATAS
         function goBack() {
             if (pageHistory.length > 1) {
-                pageHistory.pop(); // Hapus halaman saat ini
+                pageHistory.pop();
                 let prevPage = pageHistory[pageHistory.length - 1];
-                
                 document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active-page'));
                 document.getElementById(prevPage).classList.add('active-page');
-                
                 document.getElementById('globalBackBtn').style.visibility = (prevPage === 'page-home') ? 'hidden' : 'visible';
             }
         }
 
-        // FILTER KATALOG PRESET
         function filterPreset(kategori, btn) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -430,48 +413,57 @@
                 grid.innerHTML += `
                     <div class="preset-item">
                         <div>
-                            <div style="background:rgba(255,255,255,0.01); border:1px dashed var(--glass-border); height:85px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--text-dim); font-size:11px; margin-bottom:10px;">Render Preview Asset</div>
+                            <div style="background:rgba(255,255,255,0.01); border:1px dashed var(--glass-border); height:85px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--text-dim); font-size:11px; margin-bottom:10px;">Render Preview Asset</div>
                             <h4 style="font-size:14px; color:#fff;">${item.nama}</h4>
                             <p style="font-size:12px; color:var(--text-dim); margin-top:5px; line-height:1.4;">${item.guna}</p>
                         </div>
                         <div style="margin-top:15px;">
-                            <p style="color:var(--primary); font-weight:700; font-size:15px; margin-bottom:6px;">Rp ${item.harga.toLocaleString('id-ID')}</p>
-                            <button class="btn btn-primary" style="padding:8px; font-size:12px;" onclick="buyDirect('${item.nama}', ${item.harga})">Ambil Preset</button>
+                            <p style="color:var(--accent); font-weight:700; font-size:15px; margin-bottom:6px;">Rp ${item.harga.toLocaleString('id-ID')}</p>
+                            <button class="btn btn-outline" style="padding:8px; font-size:12px;" onclick="buyDirect('${item.nama}', ${item.harga})">Ambil Preset</button>
                         </div>
                     </div>
                 `;
             });
         }
 
-        // EVENT KLIK STYLE CARDS & UPDATE KREATOR SECARA DINAMIS
-        function selectStyle(element, price, name, creator) {
+        // CONTROL SELEKSI STYLE UTAMA
+        function selectStyle(element, price, name, isStyleLain) {
             document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
             element.classList.add('active');
             
             baseStylePrice = price;
             selectedStyleName = name;
             
-            // Ganti nama kreator di box info bawahnya
-            document.getElementById('creatorNameDisplay').innerText = creator;
+            const creatorArea = document.getElementById('creatorArea');
+            if (isStyleLain) {
+                creatorArea.style.display = 'block'; // Tampilkan list kreator
+            } else {
+                creatorArea.style.display = 'none';  // Sembunyikan list kreator
+            }
             calculateCustomPrice();
         }
 
-        // UPDATE JUMLAH VIDEO (HITUNGAN FLAT 3K/VIDEO)
+        // CONTROL KLIK PILIHAN KREATOR NYATANYA
+        function selectCreator(element, creatorName) {
+            document.querySelectorAll('.creator-chip').forEach(chip => chip.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedCreatorName = creatorName; // Set nama kreator yang dipilih
+        }
+
         function updateVideoCount(change) {
             let el = document.getElementById('qtyVideo');
             let val = parseInt(el.innerText) + change;
-            if (val < 1) val = 1; // Minimal kirim 1 video
+            if (val < 1) val = 1;
             el.innerText = val;
             calculateCustomPrice();
         }
 
-        // TOTAL KALKULATOR BARU: 3K PER VIDEO + BIAYA STYLE + EKSTRA FITUR
         function calculateCustomPrice() {
             let qtyVideo = parseInt(document.getElementById('qtyVideo').innerText);
             let is3D = document.getElementById('c_3d').checked;
             let isCC = document.getElementById('c_cc').checked;
 
-            // RUMUS UTAMA: (Jumlah Video * 3000) + Harga Base Style + Add-ons
+            // RUMUS FIX: (Jumlah Video * 3000) + Biaya Tambahan Pilihan Style
             let total = (qtyVideo * 3000) + baseStylePrice;
             if (is3D) total += 10000;
             if (isCC) total += 5000;
@@ -481,7 +473,13 @@
         }
 
         function proceedToCheckout() {
-            let detail = `Custom Request: Style ${selectedStyleName} (${document.getElementById('qtyVideo').innerText} Video)`;
+            let finalStyleText = selectedStyleName;
+            // Jika memilih style lain, masukkan juga nama kreatornya ke invoice nota belanjaan
+            if(selectedStyleName === 'Style Kreator Lain') {
+                finalStyleText = `Style Lain (${selectedCreatorName})`;
+            }
+            
+            let detail = `Custom Request: ${finalStyleText} (${document.getElementById('qtyVideo').innerText} Video)`;
             document.getElementById('checkoutItemName').innerText = detail;
             updateCheckoutData(currentCustomPrice);
         }
@@ -498,21 +496,20 @@
             navToPage('page-checkout');
         }
 
-        // TIMER QRIS CONTROL
         let intervalTimer;
         function startTimer() {
             clearInterval(intervalTimer);
             let time = 15 * 60;
             const display = document.getElementById('countdownTimer');
             intervalTimer = setInterval(() => {
-                let m = Math.floor(time / 60); let s = t = time % 60;
+                let m = Math.floor(time / 60); let s = time % 60;
                 display.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
                 if (time-- <= 0) { clearInterval(intervalTimer); display.innerText = "EXPIRED"; }
             }, 1000);
         }
 
         window.onload = () => {
-            document.getElementById('globalBackBtn').style.visibility = 'hidden'; // Sembunyikan back di home awal
+            document.getElementById('globalBackBtn').style.visibility = 'hidden';
             filterPreset('Semua', document.querySelector('.tab-btn.active'));
             calculateCustomPrice();
         };
