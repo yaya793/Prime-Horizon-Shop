@@ -3,165 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EB | Premium Studio Workspace</title>
+    <title>EB | EditorBase Premium Studio</title>
     <style>
-        /* FONT & CORE DESIGN SYSTEM */
+        /* CORE DESIGN SYSTEM (CYBER NEON THEME) */
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
         
         :root {
-            --bg-color: #030508;
-            --glass-bg: rgba(255, 255, 255, 0.02);
+            --bg-dark: #04060a;
+            --glass-card: rgba(8, 12, 24, 0.75);
             --glass-border: rgba(255, 255, 255, 0.05);
-            --glass-card: rgba(10, 15, 30, 0.7);
             --primary: #00f0ff;
-            --primary-hover: #00c3cc;
-            --accent: #8b5cf6;
-            --text-main: #f8f9fa;
-            --text-dim: #7e8fa4;
+            --primary-glow: rgba(0, 240, 255, 0.35);
+            --accent: #bd00ff;
+            --accent-glow: rgba(189, 0, 255, 0.25);
+            --text-main: #f1f5f9;
+            --text-dim: #64748b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         
         body { 
-            background-color: var(--bg-color); 
+            background-color: var(--bg-dark); 
             color: var(--text-main); 
             overflow-x: hidden;
-            background-image: radial-gradient(circle at 0% 0%, rgba(0, 240, 255, 0.05), transparent 40%),
-                              radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.05), transparent 40%);
+            background-image: radial-gradient(circle at 50% 0%, rgba(189, 0, 255, 0.07), transparent 50%),
+                              radial-gradient(circle at 0% 100%, rgba(0, 240, 255, 0.05), transparent 40%);
             background-attachment: fixed;
+            padding-top: 80px; /* Jarak agar konten tidak tertutup Sticky Header */
         }
 
-        /* ANIMASI REVEAL */
-        .reveal { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.5s forwards cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-
-        /* MULTI-COLUMN LAYOUT SYSTEM (Solusi Biar Gak Kebesaran di Laptop) */
-        .page-section { display: none; padding: 40px 20px; max-width: 1200px; margin: auto; }
-        .active-page { display: block; }
+        /* 1. STICKY NAVIGATION HEADER (ANTI-HILANG SAAT DI-SCROLL) */
+        .sticky-header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 65px;
+            background: rgba(4, 6, 10, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border); z-index: 9999;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+        .header-btn {
+            background: transparent; border: 1px solid var(--glass-border); color: var(--text-main);
+            padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;
+            transition: 0.2s; display: flex; align-items: center; gap: 5px;
+        }
+        .header-btn:hover { border-color: var(--primary); color: var(--primary); box-shadow: 0 0 10px var(--primary-glow); }
+        .header-brand { font-size: 22px; font-weight: 900; letter-spacing: -1px; text-shadow: 0 0 10px var(--primary-glow); }
+        .header-brand span { color: var(--primary); }
         
-        /* Grid pembagi info sampingan vs konten utama di Laptop */
-        .workspace-grid { display: grid; grid-template-columns: 1fr 2.5fr; gap: 30px; align-items: start; margin-top: 20px; }
+        /* SIDEBAR DRAWER MENU GARIS 3 */
+        .menu-drawer {
+            position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
+            background: #060913; border-left: 1px solid var(--glass-border); z-index: 10000;
+            padding: 30px 20px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+        }
+        .menu-drawer.open { right: 0; }
+        .drawer-close { text-align: right; font-size: 24px; cursor: pointer; color: var(--text-dim); margin-bottom: 30px; }
+        .drawer-close:hover { color: #fff; }
+        .drawer-link { display: block; padding: 14px; color: #fff; text-decoration: none; font-weight: 600; border-radius: 10px; margin-bottom: 10px; background: rgba(255,255,255,0.01); }
+        .drawer-link:hover { background: var(--primary); color: #000; }
+
+        /* MULTI-COLUMN LAYOUT STRUCTURE */
+        .page-section { display: none; padding: 20px; max-width: 1200px; margin: auto; animation: fadeUp 0.4s ease-out; }
+        .active-page { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .workspace-grid { display: grid; grid-template-columns: 1fr 2.5fr; gap: 25px; align-items: start; margin-top: 15px; }
         .sidebar-info { display: flex; flex-direction: column; gap: 20px; }
 
-        /* KOMPONEN GLASSMORPHISM KELAS ATAS */
+        /* PREMIUM CARDS GLASSMORPHISM */
         .card { 
             background: var(--glass-card); border: 1px solid var(--glass-border); border-radius: 20px; 
-            padding: 25px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            padding: 25px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
         }
-        
-        /* KOTAK EDUKASI (Biar menu ga kosong) */
-        .edu-box { background: rgba(0, 240, 255, 0.02); border-left: 4px solid var(--primary); padding: 15px; border-radius: 0 12px 12px 0; margin-bottom: 15px; }
-        .edu-box h5 { color: var(--primary); font-size: 14px; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* INFORMASI EDUKASI BIAR GA KOSONG */
+        .edu-box { background: rgba(0, 240, 255, 0.01); border-left: 3px solid var(--primary); padding: 14px; border-radius: 0 12px 12px 0; margin-bottom: 15px; border-top: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); }
+        .edu-box h5 { color: var(--primary); font-size: 13px; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; }
         .edu-box p { font-size: 13px; color: var(--text-dim); line-height: 1.4; }
 
-        /* TOMBOL & INPUT CONTROLS */
-        .btn { 
-            display: block; width: 100%; padding: 14px; border-radius: 12px; font-weight: 700; text-align: center; 
-            cursor: pointer; transition: all 0.3s ease; border: none; font-size: 15px;
-        }
-        .btn-primary { background: var(--primary); color: #000; box-shadow: 0 0 20px rgba(0, 240, 255, 0.2); }
-        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 240, 255, 0.4); }
+        /* BUTTON SYSTEM */
+        .btn { display: block; width: 100%; padding: 15px; border-radius: 12px; font-weight: 700; text-align: center; cursor: pointer; transition: 0.2s; border: none; font-size: 15px; }
+        .btn-primary { background: linear-gradient(90deg, var(--primary), #00bcff); color: #000; box-shadow: 0 0 15px var(--primary-glow); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 25px rgba(0, 240, 255, 0.5); }
         .btn-outline { background: transparent; border: 1px solid var(--glass-border); color: var(--text-main); }
         .btn-outline:hover { border-color: var(--primary); color: var(--primary); background: rgba(0,240,255,0.02); }
 
-        .title { font-size: 32px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 10px; }
-        .title span { color: var(--primary); text-shadow: 0 0 15px rgba(0, 240, 255, 0.3); }
+        .title { font-size: 30px; font-weight: 900; margin-bottom: 5px; text-transform: uppercase; letter-spacing: -0.5px; }
+        .title span { color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); }
 
-        /* 1. LAYOUT MENU AWAL */
-        .home-layout { display: grid; grid-template-columns: 1.2fr 1.8fr; gap: 30px; margin-top: 20px; }
-        .brand-logo { font-size: 50px; font-weight: 900; letter-spacing: -2px; }
-        .brand-logo span { color: var(--primary); }
-        
-        /* INFINITE CAROUSEL SLIDER */
-        .slider-container { width: 100%; height: 260px; overflow: hidden; border-radius: 16px; border: 1px solid var(--glass-border); position: relative; }
-        .slider-track { display: flex; width: 300%; height: 100%; animation: slideLoop 12s infinite ease-in-out; }
+        /* INFINITE IMAGE SLIDER AUTOMATIC */
+        .slider-container { width: 100%; height: 240px; overflow: hidden; border-radius: 16px; border: 1px solid var(--glass-border); position: relative; margin-bottom: 20px; }
+        .slider-track { display: flex; width: 300%; height: 100%; animation: slideLoop 10s infinite ease-in-out; }
         .slide { width: 33.333%; height: 100%; background-size: cover; background-position: center; display: flex; align-items: flex-end; }
-        .slide-overlay { background: linear-gradient(transparent, rgba(0,0,0,0.9)); width: 100%; padding: 20px; font-weight: 600; font-size: 14px; color: #fff; }
+        .slide-overlay { background: linear-gradient(transparent, rgba(4,6,10,0.95)); width: 100%; padding: 20px; font-weight: 600; font-size: 14px; }
         @keyframes slideLoop { 0%, 28% { transform: translateX(0); } 33%, 61% { transform: translateX(-33.333%); } 66%, 94% { transform: translateX(-66.666%); } 100% { transform: translateX(0); } }
 
-        /* 2. LAYOUT MENU 1 (KATALOG INSTAN) */
-        .tab-container { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; }
+        /* TAB KATALOG */
+        .tab-container { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 20px; }
         .tab-btn { padding: 8px 16px; background: transparent; border: 1px solid var(--glass-border); border-radius: 30px; color: var(--text-dim); cursor: pointer; white-space: nowrap; font-weight: 600; font-size: 13px; }
         .tab-btn.active, .tab-btn:hover { background: var(--primary); color: #000; border-color: var(--primary); }
-        
-        .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; }
-        .preset-item { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 16px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
-        .preset-use { font-size: 12px; color: var(--text-dim); margin: 8px 0; background: rgba(255,255,255,0.01); padding: 8px; border-radius: 6px; border: 1px dashed rgba(255,255,255,0.05); }
 
-        /* 3. LAYOUT MENU 2 (CUSTOM PROJECT) */
-        .style-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        .style-card { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 14px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .style-card.active { border-color: var(--primary); background: rgba(0, 240, 255, 0.03); box-shadow: 0 0 15px rgba(0, 240, 255, 0.1) inset; }
+        .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 15px; }
+        .preset-item { background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); border-radius: 16px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
+
+        /* GRID PEMILIHAN STYLE DAN DYNAMIC CREATOR BOX */
+        .style-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        .style-card { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 12px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .style-card.active { border-color: var(--primary); background: rgba(0, 240, 255, 0.02); box-shadow: 0 0 15px var(--primary-glow) inset; }
+        .style-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+        .style-card p { font-size: 11px; color: var(--text-dim); }
+
+        /* Pop-up Info Kreator Di Bawah Klik Kartu */
+        .creator-showcase-box {
+            background: linear-gradient(90deg, rgba(189, 0, 255, 0.05), rgba(0, 240, 255, 0.05));
+            border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 12px; padding: 12px 15px;
+            margin-bottom: 20px; display: flex; align-items: center; gap: 10px; animation: glowPulse 2s infinite alternate;
+        }
+        @keyframes glowPulse { from { border-color: rgba(0, 240, 255, 0.2); } to { border-color: rgba(189, 0, 255, 0.4); } }
+
+        /* COUNTER */
+        .counter-box { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 15px; border-radius: 14px; text-align: center; margin-bottom: 20px; }
+        .counter-controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border-radius: 10px; padding: 4px; max-width: 200px; margin: 10px auto 0 auto; }
+        .c-btn { background: transparent; border: none; color: var(--primary); font-size: 22px; width: 40px; height: 40px; cursor: pointer; font-weight: 700; }
         
-        .counter-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .counter-box { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); padding: 12px; border-radius: 14px; text-align: center; }
-        .counter-controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border-radius: 8px; padding: 4px; margin-top: 8px; }
-        .c-btn { background: transparent; border: none; color: var(--primary); font-size: 20px; width: 35px; height: 35px; cursor: pointer; }
-        
-        .toggle-group { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 12px; margin-bottom: 10px; font-size: 14px; }
-        .switch { position: relative; display: inline-block; width: 46px; height: 22px; }
+        .toggle-group { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 12px; margin-bottom: 10px; font-size: 14px; }
+        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); border-radius: 34px; transition: .3s; }
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: #fff; border-radius: 50%; transition: .3s; }
         input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(24px); background-color: #000; }
+        input:checked + .slider:before { transform: translateX(22px); background-color: #000; }
 
-        .price-display { text-align: center; font-size: 36px; font-weight: 900; margin: 20px 0; border-top: 1px dashed var(--glass-border); padding-top: 15px; }
+        .price-display { text-align: center; font-size: 38px; font-weight: 900; margin: 25px 0; border-top: 1px dashed var(--glass-border); padding-top: 15px; }
         .price-display span { font-size: 18px; color: var(--primary); }
 
-        .custom-input, .custom-select, .custom-textarea { width: 100%; padding: 14px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); border-radius: 10px; color: white; font-size: 14px; outline: none; }
-        .custom-input:focus, .custom-select:focus, .custom-textarea:focus { border-color: var(--primary); }
-        .custom-textarea { resize: none; height: 80px; }
+        .custom-input { width: 100%; padding: 14px; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); border-radius: 10px; color: white; font-size: 14px; outline: none; }
+        .custom-input:focus { border-color: var(--primary); }
 
-        /* QRIS GATEWAY INTERFACE */
-        .qris-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .qris-frame { background: white; padding: 12px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 15px; }
-
-        /* RESPONSIVE BREAKPOINT (HP) */
+        /* RESPONSIVE LAPTOP VS MOBILE ACCORDION */
         @media (max-width: 900px) {
-            .home-layout, .workspace-grid { grid-template-columns: 1fr; gap: 20px; }
-            .sidebar-info { order: 2; } /* Taruh info tambahan di bawah halaman utama pas di HP */
-            .title { font-size: 26px; }
+            .workspace-grid { grid-template-columns: 1fr; }
+            .sidebar-info { order: 2; }
+            .title { font-size: 24px; }
         }
     </style>
 </head>
 <body>
 
-    <div id="page-home" class="page-section active-page reveal">
-        <div class="home-layout">
+    <div class="sticky-header">
+        <button class="header-btn" id="globalBackBtn" onclick="goBack()">&larr; Back</button>
+        <div class="header-brand">EB | <span>EditorBase</span></div>
+        <button class="header-btn" onclick="toggleDrawer()">&#9776;</button>
+    </div>
+
+    <div class="menu-drawer" id="menuDrawer">
+        <div class="drawer-close" onclick="toggleDrawer()">&times; Close</div>
+        <a href="#" class="drawer-link" onclick="navToPage('page-home')">Beranda Utama</a>
+        <a href="#" class="drawer-link" onclick="navToPage('page-katalog')">Katalog Preset</a>
+        <a href="#" class="drawer-link" onclick="navToPage('page-custom')">Custom Request</a>
+        <a href="https://wa.me/6281234567890" target="_blank" class="drawer-link" style="color: #25D366;">WhatsApp Admin</a>
+    </div>
+
+
+    <div id="page-home" class="page-section active-page">
+        <div class="workspace-grid" style="grid-template-columns: 1fr 1.5fr;">
             
-            <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
-                <div class="brand-logo">E<span>B</span></div>
-                <h1 class="title" style="font-size: 24px; margin-bottom: 5px;">Welcome Workspace</h1>
-                <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 25px;">Premium Presets & Custom Request Platform by @friiwangyy</p>
+            <div class="card" style="text-align: center;">
+                <div style="width: 85px; height: 85px; background: linear-gradient(45deg, var(--primary), var(--accent)); border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; color: #000; box-shadow: 0 0 20px var(--primary-glow);">EB</div>
+                <h2 style="font-size: 22px; margin-bottom: 5px;">EditorBase Studio</h2>
+                <p style="color: var(--text-dim); font-size: 13px; margin-bottom: 25px;">Platform Dagang Preset JJ & Jasa Edit @friiwangyy</p>
                 
-                <button class="btn btn-primary" onclick="navTo('page-katalog')" style="margin-bottom: 12px;">Katalog Instan</button>
-                <button class="btn btn-outline" onclick="navTo('page-custom')">Buat Custom Request</button>
+                <button class="btn btn-primary" onclick="navToPage('page-katalog')" style="margin-bottom: 12px;">Katalog Preset Instan</button>
+                <button class="btn btn-outline" onclick="navToPage('page-custom')">Buat Custom Request</button>
             </div>
 
             <div class="card">
                 <div class="slider-container">
                     <div class="slider-track">
-                        <div class="slide" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.9)), url('https://via.placeholder.com/800x400/0c1020/fff?text=Slide+Preview+1')">
-                            <div class="slide-overlay">✨ Hyper-Kece 3D Smooth Velocity Sync</div>
+                        <div class="slide" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.9)), url('https://via.placeholder.com/800x400/080c18/fff?text=Slide+1+-[Soft+Spoken]')">
+                            <div class="slide-overlay">🎙️ Style Soft Spoken Estetik Alur Bicara</div>
                         </div>
-                        <div class="slide" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.9)), url('https://via.placeholder.com/800x400/150c20/fff?text=Slide+Preview+2')">
-                            <div class="slide-overlay">🎬 Soft Cinematic Blur & Grading CC Premium</div>
+                        <div class="slide" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.9)), url('https://via.placeholder.com/800x400/120818/fff?text=Slide+2+-[Hyper+Kece]')">
+                            <div class="slide-overlay">⚡ Style Hyper-Kece 3D Berjalan Presisi</div>
                         </div>
-                        <div class="slide" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.9)), url('https://via.placeholder.com/800x400/0c2015/fff?text=Slide+Preview+3')">
-                            <div class="slide-overlay">🔥 Hardcore Brutal Beat Full Overlay FX</div>
+                        <div class="slide" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.9)), url('https://via.placeholder.com/800x400/081812/fff?text=Slide+3+-[Hardcore+Brutal]')">
+                            <div class="slide-overlay">🔥 Style Hardcore Brutal Full Shake FX</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="edu-box" style="margin-top: 15px;">
-                    <h5>💡 Kegunaan Platform</h5>
-                    <p>Tempat terbaik buat konten kreator, admin jualan, atau editor pemula untuk dapetin aset video jedag-jedug premium berkelas tanpa ribet.</p>
-                </div>
                 <div class="edu-box">
-                    <h5>💎 Keuntungan Belanja</h5>
-                    <p>File rapi, XML ringan anti-delay, masking objek bersih, dan dapet jaminan support chat admin gratis kalau bingung cara pakainya.</p>
+                    <h5>💡 Kegunaan Website</h5>
+                    <p>Memudahkan kreator konten pemula atau pro untuk mendapatkan pasokan template jedag-jedug Alight Motion premium tanpa ribet ngedit keyframe manual.</p>
+                </div>
+                <div class="edu-box" style="margin-bottom: 0;">
+                    <h5>💎 Keuntungan Membeli Aset</h5>
+                    <p>File terjamin ringan, kode XML anti error, transisi ketukan sangat pas dengan sound bass, dan pengerjaan custom super cepat.</p>
                 </div>
             </div>
 
@@ -169,33 +207,32 @@
     </div>
 
 
-    <div id="page-katalog" class="page-section reveal">
-        <h2 class="title">Katalog <span>Instan</span></h2>
+    <div id="page-katalog" class="page-section">
+        <h2 class="title">Katalog <span>Preset</span></h2>
+        <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 15px;">Daftar template siap pakai impor instan langsung ke Alight Motion.</p>
         
         <div class="workspace-grid">
             <div class="sidebar-info">
                 <div class="card">
-                    <h3 style="font-size: 16px; margin-bottom: 15px; color:#fff;">ℹ️ Panduan & Info</h3>
+                    <h3 style="font-size: 15px; margin-bottom: 12px;">📋 Panduan Katalog</h3>
                     <div class="edu-box">
-                        <h5>📖 Cara Pakai Preset</h5>
-                        <p>Setelah melakukan pembayaran, link XML/QR Code Alight Motion otomatis diberikan. Tinggal impor langsung ke aplikasi kamu.</p>
+                        <h5>📖 Cara Penggunaan</h5>
+                        <p>Pilih file template yang kamu inginkan, klik beli, selesaikan QRIS. Tautan impor XML instan akan langsung muncul otomatis.</p>
                     </div>
-                    <div class="edu-box">
-                        <h5>🎯 Keuntungan Katalog</h5>
-                        <p>Harga jauh lebih ekonomis, instan langsung kirim, cocok buat kejar tayang fyp harian media sosial kamu.</p>
+                    <div class="edu-box" style="margin-bottom:0;">
+                        <h5>⚡ Spesifikasi Kompatibel</h5>
+                        <p>Bisa digunakan pada Alight Motion versi lama maupun terbaru baik di perangkat Android maupun iOS.</p>
                     </div>
-                    <button class="btn btn-outline" style="font-size:13px; padding:10px;" onclick="navTo('page-home')">🔙 Beranda Utama</button>
                 </div>
             </div>
 
             <div class="card">
                 <div class="tab-container">
                     <button class="tab-btn active" onclick="filterPreset('Semua', this)">Semua</button>
-                    <button class="tab-btn" onclick="filterPreset('Cinematic', this)">Cinematic / Soft</button>
-                    <button class="tab-btn" onclick="filterPreset('Kece', this)">Hyper-Kece</button>
-                    <button class="tab-btn" onclick="filterPreset('Brutal', this)">Hardcore Brutal</button>
+                    <button class="tab-btn" onclick="filterPreset('Soft', this)">Soft Spoken</button>
+                    <button class="tab-btn" onclick="filterPreset('Kece', this)">Kece</button>
+                    <button class="tab-btn" onclick="filterPreset('Brutal', this)">Brutal</button>
                 </div>
-
                 <div class="preset-grid" id="presetList">
                     </div>
             </div>
@@ -203,242 +240,240 @@
     </div>
 
 
-    <div id="page-custom" class="page-section reveal">
+    <div id="page-custom" class="page-section">
         <h2 class="title">Custom <span>Request</span></h2>
+        <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 15px;">Kalkulator Jasa Edit Video Manual Berdasarkan Jumlah Bahan.</p>
         
         <div class="workspace-grid">
             <div class="sidebar-info">
                 <div class="card">
-                    <h3 style="font-size: 16px; margin-bottom: 15px; color:#fff;">🛠️ Aturan Custom</h3>
+                    <h3 style="font-size: 15px; margin-bottom: 12px;">🛠️ Info Jasa Custom</h3>
                     <div class="edu-box">
-                        <h5>📌 Cara Request</h5>
-                        <p>Pilih base style, tentukan jumlah klip/foto yang mau kamu kirim, nyalakan fitur tambahan (3D/CC) jika perlu.</p>
+                        <h5>💸 Skema Harga</h5>
+                        <p>Sistem hitungan flat hemat Rp 3.000 untuk per 1 video bahan baku yang kamu kumpulkan ke admin.</p>
                     </div>
                     <div class="edu-box">
-                        <h5>🔗 Kolom Link Contoh</h5>
-                        <p>Punya acuan video JJ dari TikTok orang lain? Salin link-nya dan tempel di kolom form agar hasil editan admin 100% mirip.</p>
+                        <h5>🔗 Kegunaan Tautan</h5>
+                        <p>Kolom link referensi dipakai kalau kamu pengen niru gaya editan sound TikTok punya creator idola lain.</p>
                     </div>
-                    <div class="edu-box">
-                        <h5>🕒 Estimasi Proses</h5>
-                        <p>Project custom dikerjakan manual secara detail dengan waktu pengerjaan 1-2 hari tergantung antrean.</p>
+                    <div class="edu-box" style="margin-bottom:0;">
+                        <h5>🕒 Waktu Kerja</h5>
+                        <p>Proses perakitan aset memakan waktu 1x24 jam untuk hasil transisi ketukan musik paling maksimal.</p>
                     </div>
-                    <button class="btn btn-outline" style="font-size:13px; padding:10px;" onclick="navTo('page-home')">🔙 Beranda Utama</button>
                 </div>
             </div>
 
             <div class="card">
-                <span style="font-size: 14px; font-weight: 700; display: block; margin-bottom: 10px;">1. Pilih Base Style Video</span>
+                <span style="font-size: 14px; font-weight: 700; display: block; margin-bottom: 10px;">1. Pilih Style & Creator Preset</span>
                 <div class="style-grid">
-                    <div class="style-card active" onclick="selectStyle(this, 15000, 'Cinematic / Soft')">
-                        <div style="font-size:24px; margin-bottom:5px;">🎬</div>
-                        <div style="font-weight:700; font-size:14px;">Cinematic Soft</div>
-                        <div style="font-size:11px; color:var(--text-dim);">Base: 15k</div>
+                    <div class="style-card active" onclick="selectStyle(this, 5000, 'Soft Spoken', 'Nama Creator 1')">
+                        <h4>Soft Spoken</h4>
+                        <p>+Rp 5.000</p>
                     </div>
-                    <div class="style-card" onclick="selectStyle(this, 25000, 'Hyper-Kece')">
-                        <div style="font-size:24px; margin-bottom:5px;">⚡</div>
-                        <div style="font-weight:700; font-size:14px;">Hyper-Kece</div>
-                        <div style="font-size:11px; color:var(--text-dim);">Base: 25k</div>
+                    <div class="style-card" onclick="selectStyle(this, 10000, 'Kece Style', 'Nama Creator 2')">
+                        <h4>Kece Style</h4>
+                        <p>+Rp 10.000</p>
                     </div>
-                    <div class="style-card" onclick="selectStyle(this, 35000, 'Hardcore Brutal')">
-                        <div style="font-size:24px; margin-bottom:5px;">🔥</div>
-                        <div style="font-weight:700; font-size:14px;">Hardcore Brutal</div>
-                        <div style="font-size:11px; color:var(--text-dim);">Base: 35k</div>
+                    <div class="style-card" onclick="selectStyle(this, 15000, 'Brutal Full FX', 'Nama Creator 3')">
+                        <h4>Brutal Full FX</h4>
+                        <p>+Rp 15.000</p>
                     </div>
-                </div>
-
-                <span style="font-size: 14px; font-weight: 700; display: block; margin-bottom: 10px;">2. Atur Jumlah Klip Bahan</span>
-                <div class="counter-group">
-                    <div class="counter-box">
-                        <div style="font-size:12px; color:var(--text-dim);">Klip Video (+5k/klip)</div>
-                        <div class="counter-controls">
-                            <button class="c-btn" onclick="updateCount('qtyVideo', -1)">-</button>
-                            <span style="font-weight:700;" id="qtyVideo">1</span>
-                            <button class="c-btn" onclick="updateCount('qtyVideo', 1)">+</button>
-                        </div>
+                    <div class="style-card" onclick="selectStyle(this, 20000, 'Kang Preset V4', 'Nama Creator 4')">
+                        <h4>Kang Preset V4</h4>
+                        <p>+Rp 20.000</p>
                     </div>
-                    <div class="counter-box">
-                        <div style="font-size:12px; color:var(--text-dim);">File Foto (+1k/foto)</div>
-                        <div class="counter-controls">
-                            <button class="c-btn" onclick="updateCount('qtyFoto', -1)">-</button>
-                            <span style="font-weight:700;" id="qtyFoto">0</span>
-                            <button class="c-btn" onclick="updateCount('qtyFoto', 1)">+</button>
-                        </div>
+                    <div class="style-card" onclick="selectStyle(this, 25000, 'Kang Preset V5', 'Nama Creator 5')">
+                        <h4>Kang Preset V5</h4>
+                        <p>+Rp 25.000</p>
                     </div>
                 </div>
 
-                <span style="font-size: 14px; font-weight: 700; display: block; margin-bottom: 10px;">3. Fitur Kamera & FX</span>
+                <div class="creator-showcase-box" id="creatorBox">
+                    <span style="font-size: 18px;">👤</span>
+                    <div>
+                        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Arsitek Preset Asli</div>
+                        <div style="font-size: 14px; font-weight: 700; color: #fff;" id="creatorNameDisplay">Nama Creator 1</div>
+                    </div>
+                </div>
+
+                <span style="font-size: 14px; font-weight: 700; display: block; margin-bottom: 5px;">2. Jumlah Video Bahan (Rp 3.000 / Video)</span>
+                <div class="counter-box">
+                    <div class="counter-controls">
+                        <button class="c-btn" onclick="updateVideoCount(-1)">-</button>
+                        <span style="font-weight: 700; font-size: 18px;" id="qtyVideo">1</span>
+                        <button class="c-btn" onclick="updateVideoCount(1)">+</button>
+                    </div>
+                </div>
+
+                <span style="font-size: 14px; font-weight: 700; display: block; margin-bottom: 10px;">3. Modifikasi FX Ekstra</span>
                 <div class="toggle-group">
-                    <span>Gunakan Pergerakan Kamera 3D (+15k)</span>
+                    <span>Gunakan Gerakan 3D Perputaran Kamera (+10k)</span>
                     <label class="switch">
                         <input type="checkbox" id="c_3d" onchange="calculateCustomPrice()">
                         <span class="slider"></span>
                     </label>
                 </div>
                 <div class="toggle-group">
-                    <span>Preset Premium Color Grading / CC (+5k)</span>
+                    <span>Color Grading CC Glow Premium (+5k)</span>
                     <label class="switch">
                         <input type="checkbox" id="c_cc" onchange="calculateCustomPrice()">
                         <span class="slider"></span>
                     </label>
                 </div>
 
-                <span style="font-size: 14px; font-weight: 700; display: block; margin-top: 15px; margin-bottom: 10px;">4. Link Referensi Video/Preset Reff</span>
-                <input type="text" id="c_ref_link" class="custom-input" placeholder="Tempel link TikTok sound atau google drive bahan...">
+                <span style="font-size: 14px; font-weight: 700; display: block; margin-top: 15px; margin-bottom: 10px;">4. Link Referensi Video / Sound Reff</span>
+                <input type="text" id="c_ref_link" class="custom-input" placeholder="Tempel link sound TikTok / tautan drive bahan video...">
 
                 <div class="price-display" id="displayCustomPrice"><span>Rp</span> 0</div>
 
-                <button class="btn btn-primary" onclick="proceedToCheckout()">Lanjut Pengisian Data</button>
+                <button class="btn btn-primary" onclick="proceedToCheckout()">Lanjutkan Pemesanan</button>
             </div>
         </div>
     </div>
 
 
-    <div id="page-checkout" class="page-section reveal">
-        <h2 class="title">Detail <span>Transaksi</span></h2>
-        <div class="workspace-grid">
-            <div class="sidebar-info">
-                <div class="card">
-                    <div class="edu-box">
-                        <h5>🔒 Keamanan Data</h5>
-                        <p>Nomor WhatsApp dan Email kamu hanya digunakan untuk mengirimkan file invoice nota pembayaran serta pengiriman link produk final.</p>
-                    </div>
-                </div>
+    <div id="page-checkout" class="page-section">
+        <h2 class="title">Form <span>Data Diri</span></h2>
+        <div class="card" style="max-width: 600px; margin: auto;">
+            <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border);">
+                <p style="color:var(--text-dim); font-size:12px;">Rincian Pilihan:</p>
+                <h4 id="checkoutItemName" style="color:#fff; font-size:15px; margin-bottom:5px;">Custom Project</h4>
+                <h2 id="checkoutFinalPrice" style="color:var(--primary); font-size:22px;">Rp 0</h2>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 12px; color: var(--text-dim); display: block; margin-bottom: 6px;">Nama Lengkap Anda</label>
+                <input type="text" class="custom-input" placeholder="Nama panggilan...">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 12px; color: var(--text-dim); display: block; margin-bottom: 6px;">Nomor WhatsApp Kontak</label>
+                <input type="number" class="custom-input" placeholder="08xxxxxxxxxx">
             </div>
 
-            <div class="card">
-                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border);">
-                    <p style="color:var(--text-dim); font-size:12px;">Item Yang Dipesan:</p>
-                    <h4 id="checkoutItemName" style="color:#fff; font-size:15px; margin-bottom:5px;">Custom Project</h4>
-                    <h2 id="checkoutFinalPrice" style="color:var(--primary); font-size:22px;">Rp 0</h2>
-                </div>
-
-                <div style="display:flex; gap:15px; margin-bottom:15px;">
-                    <div style="flex:1;">
-                        <label style="font-size:12px; color:var(--text-dim); display:block; margin-bottom:5px;">Nama Pemesan</label>
-                        <input type="text" class="custom-input" placeholder="Nama kamu">
-                    </div>
-                    <div style="flex:1;">
-                        <label style="font-size:12px; color:var(--text-dim); display:block; margin-bottom:5px;">Alamat E-mail</label>
-                        <input type="email" class="custom-input" placeholder="contoh@gmail.com">
-                    </div>
-                </div>
-                <div style="margin-bottom:15px;">
-                    <label style="font-size:12px; color:var(--text-dim); display:block; margin-bottom:5px;">Nomor WA Aktif</label>
-                    <input type="number" class="custom-input" placeholder="08xxxxxxxxxx">
-                </div>
-                <div style="margin-bottom:20px;">
-                    <label style="font-size:12px; color:var(--text-dim); display:block; margin-bottom:5px;">Pilih Saluran Pembayaran</label>
-                    <select class="custom-select">
-                        <option>QRIS Otomatis (DANA, OVO, GOPAY, ShopeePay)</option>
-                        <option>Manual Transfer Bank</option>
-                    </select>
-                </div>
-
-                <button class="btn btn-primary" onclick="navTo('page-payment'); startTimer();">Proses Gerbang Bayar</button>
-            </div>
+            <button class="btn btn-primary" onclick="navToPage('page-payment'); startTimer();" style="margin-top: 15px;">Buka QRIS Pembayaran</button>
         </div>
     </div>
 
 
-    <div id="page-payment" class="page-section reveal">
-        <h2 class="title">Batas <span>Pembayaran</span></h2>
-        <div class="card" style="max-width:500px; margin:auto;">
+    <div id="page-payment" class="page-section">
+        <h2 class="title" style="text-align: center;">Scan <span>QRIS</span></h2>
+        <div class="card" style="max-width: 450px; margin: auto; text-align: center;">
             <div class="qris-wrapper">
                 <div class="qris-frame">
-                    <div style="width:200px; height:200px; background:#e0e0e0; display:flex; align-items:center; justify-content:center; color:#333; font-weight:bold; font-size:14px; text-align:center; border:2px dashed #999;">
-                        QRIS CODE<br>WORKSPACE
-                    </div>
+                    <div style="width:200px; height:200px; background:#d0d0d0; display:flex; align-items:center; justify-content:center; color:#111; font-weight:bold; font-size:12px;">FOTO QRIS RESMI EB</div>
                 </div>
-                <h2 style="font-size:32px; font-weight:900; margin-bottom:5px;" id="paymentFinalPrice">Rp 0</h2>
-                <p style="color:var(--text-dim); font-size:13px; margin-bottom:20px;">Silakan scan QR di atas menggunakan aplikasi E-wallet</p>
-                
-                <div style="background:rgba(255, 71, 87, 0.1); border:1px solid rgba(255, 71, 87, 0.2); padding:6px 20px; border-radius:20px; color:#ff4757; font-weight:700; font-size:18px; margin-bottom:25px;" id="countdownTimer">15:00</div>
-                
-                <button class="btn btn-primary" onclick="alert('Membuka integrasi WhatsApp Admin untuk verifikasi slip...')">Selesai Berbayar & Konfirmasi</button>
+                <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 5px;" id="paymentFinalPrice">Rp 0</h2>
+                <div style="background:rgba(255, 71, 87, 0.1); padding:6px 20px; border-radius:20px; color:#ff4757; font-weight:700; margin-bottom:20px;" id="countdownTimer">15:00</div>
+                <button class="btn btn-primary" onclick="alert('Mengalihkan ke WhatsApp Admin untuk validasi...')">Kirim Bukti Bayar Ke WA</button>
             </div>
         </div>
     </div>
 
-
-    <div style="position:fixed; bottom:20px; right:20px; z-index:9999;">
-        <div class="chat-menu" id="chatMenu">
-            <a href="#" onclick="alert('Fasilitas live web chat sedang perbaikan teknis.')">💬 Live Room Web</a>
-            <a href="https://wa.me/6281234567890" target="_blank" style="color:#25D366;">📱 Jalur Cepat WhatsApp</a>
-        </div>
-        <button class="btn btn-primary" style="border-radius:50%; width:55px; height:55px; font-size:22px; padding:0; display:flex; align-items:center; justify-content:center;" onclick="toggleChat()">💬</button>
-    </div>
-
-
     <script>
-        // DATA KATALOG INSTAN YANG PADAT & LENGKAP
+        // DATA PRESET LENGKAP DENGAN FUNGSI NYATA
         const presets = [
-            { nama: "Aset XML Sound Anime Soft v1", kategori: "Cinematic", harga: 15000, guna: "Fungsi: Transisi sejuk mata, optimalisasi shading warna, COCOK untuk AM Android/iOS spek kentang sekalipun." },
-            { nama: "Preset Velocity Slowmo 60FPS", kategori: "Cinematic", harga: 18000, guna: "Fungsi: Menghaluskan pergerakan klip patah-patah menjadi super smooth layaknya editing PC desktop." },
-            { nama: "3D Null Rotate Hyper-Kece AM", kategori: "Kece", harga: 25000, guna: "Fungsi: Khusus pamer profil panggung game/akun sosmed, efek guncang estetik dengan overlay neon." },
-            { nama: "Full Beat Brutal Shake XML", kategori: "Brutal", harga: 30000, guna: "Fungsi: Ketukan distorsi gila-gilaan, flash transisi cepat, sangat COCOK untuk sound kompilasi gameplay." }
+            { nama: "XML Soft Spoken Velocity v1", kategori: "Soft", harga: 15000, guna: "Fungsi: Transisi slowmo super halus, COCOK untuk klip jeda bicara bertema sedih/bercerita." },
+            { nama: "Preset Kece Style 3D Rapi", kategori: "Kece", harga: 22000, guna: "Fungsi: Menambahkan ruang rotasi 3D berlapis neon, COCOK untuk pamer profil game kesayangan." },
+            { nama: "Brutal Shake Full Bass Distortion", kategori: "Brutal", harga: 25000, guna: "Fungsi: Efek guncangan ekstrem pas ketukan bass drum keras, COCOK untuk klip kompilasi kill." }
         ];
 
-        let baseStylePrice = 15000;
-        let selectedStyleName = 'Cinematic / Soft';
+        // RIWAYAT NAVIGASI UNTUK FUNGSI TOMBOL BACK
+        let pageHistory = ['page-home'];
+        
+        let baseStylePrice = 5000;
+        let selectedStyleName = 'Soft Spoken';
         let currentCustomPrice = 0;
 
-        function navTo(pageId) {
+        // BUKA TUTUP DRAWER MENU KANAN
+        function toggleDrawer() {
+            document.getElementById('menuDrawer').classList.toggle('open');
+        }
+
+        // NAVIGASI HALAMAN & PENCATATAN HISTORI BACK
+        function navToPage(pageId) {
+            document.getElementById('menuDrawer').classList.remove('open');
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active-page'));
             document.getElementById(pageId).classList.add('active-page');
+            
+            // Sembunyikan tombol back jika berada di beranda utama
+            document.getElementById('globalBackBtn').style.visibility = (pageId === 'page-home') ? 'hidden' : 'visible';
+            
+            if (pageHistory[pageHistory.length - 1] !== pageId) {
+                pageHistory.push(pageId);
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ENGINE RENDER KATALOG DENGAN KOLOM KEGUNAAN & DETAIL
-        function filterPreset(kategori, btnElement) {
+        // FUNGSI TOMBOL BACK POJOK KIRI ATAS
+        function goBack() {
+            if (pageHistory.length > 1) {
+                pageHistory.pop(); // Hapus halaman saat ini
+                let prevPage = pageHistory[pageHistory.length - 1];
+                
+                document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active-page'));
+                document.getElementById(prevPage).classList.add('active-page');
+                
+                document.getElementById('globalBackBtn').style.visibility = (prevPage === 'page-home') ? 'hidden' : 'visible';
+            }
+        }
+
+        // FILTER KATALOG PRESET
+        function filterPreset(kategori, btn) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
+            btn.classList.add('active');
 
             const grid = document.getElementById('presetList');
             grid.innerHTML = "";
-
             const filtered = kategori === 'Semua' ? presets : presets.filter(p => p.kategori === kategori);
             
             filtered.forEach(item => {
                 grid.innerHTML += `
                     <div class="preset-item">
                         <div>
-                            <div style="background:rgba(255,255,255,0.01); border:1px dashed var(--glass-border); height:90px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--text-dim); font-size:12px; font-weight:600; margin-bottom:12px;">Pre-Render Template Asset</div>
-                            <h4 style="font-size:15px; color:#fff; font-weight:700;">${item.nama}</h4>
-                            <div class="preset-use">${item.guna}</div>
+                            <div style="background:rgba(255,255,255,0.01); border:1px dashed var(--glass-border); height:85px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--text-dim); font-size:11px; margin-bottom:10px;">Render Preview Asset</div>
+                            <h4 style="font-size:14px; color:#fff;">${item.nama}</h4>
+                            <p style="font-size:12px; color:var(--text-dim); margin-top:5px; line-height:1.4;">${item.guna}</p>
                         </div>
                         <div style="margin-top:15px;">
-                            <p style="color:var(--primary); font-weight:900; font-size:16px; margin-bottom:8px;">Rp ${item.harga.toLocaleString('id-ID')}</p>
-                            <button class="btn btn-primary" style="padding:8px; font-size:12px;" onclick="proceedToCheckoutDirect('${item.nama}', ${item.harga})">Instan Download</button>
+                            <p style="color:var(--primary); font-weight:700; font-size:15px; margin-bottom:6px;">Rp ${item.harga.toLocaleString('id-ID')}</p>
+                            <button class="btn btn-primary" style="padding:8px; font-size:12px;" onclick="buyDirect('${item.nama}', ${item.harga})">Ambil Preset</button>
                         </div>
                     </div>
                 `;
             });
         }
 
-        function selectStyle(element, price, name) {
+        // EVENT KLIK STYLE CARDS & UPDATE KREATOR SECARA DINAMIS
+        function selectStyle(element, price, name, creator) {
             document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
             element.classList.add('active');
+            
             baseStylePrice = price;
             selectedStyleName = name;
+            
+            // Ganti nama kreator di box info bawahnya
+            document.getElementById('creatorNameDisplay').innerText = creator;
             calculateCustomPrice();
         }
 
-        function updateCount(id, change) {
-            let el = document.getElementById(id);
+        // UPDATE JUMLAH VIDEO (HITUNGAN FLAT 3K/VIDEO)
+        function updateVideoCount(change) {
+            let el = document.getElementById('qtyVideo');
             let val = parseInt(el.innerText) + change;
-            if (val < 0) val = 0;
+            if (val < 1) val = 1; // Minimal kirim 1 video
             el.innerText = val;
             calculateCustomPrice();
         }
 
+        // TOTAL KALKULATOR BARU: 3K PER VIDEO + BIAYA STYLE + EKSTRA FITUR
         function calculateCustomPrice() {
-            let qtyVid = parseInt(document.getElementById('qtyVideo').innerText);
-            let qtyFot = parseInt(document.getElementById('qtyFoto').innerText);
+            let qtyVideo = parseInt(document.getElementById('qtyVideo').innerText);
             let is3D = document.getElementById('c_3d').checked;
             let isCC = document.getElementById('c_cc').checked;
 
-            let total = baseStylePrice + (qtyVid * 5000) + (qtyFot * 1000);
-            if (is3D) total += 15000;
+            // RUMUS UTAMA: (Jumlah Video * 3000) + Harga Base Style + Add-ons
+            let total = (qtyVideo * 3000) + baseStylePrice;
+            if (is3D) total += 10000;
             if (isCC) total += 5000;
 
             currentCustomPrice = total;
@@ -446,41 +481,38 @@
         }
 
         function proceedToCheckout() {
-            let detail = `Custom: ${selectedStyleName} (${document.getElementById('qtyVideo').innerText} Vid, ${document.getElementById('qtyFoto').innerText} Foto)`;
+            let detail = `Custom Request: Style ${selectedStyleName} (${document.getElementById('qtyVideo').innerText} Video)`;
             document.getElementById('checkoutItemName').innerText = detail;
-            updatePrices(currentCustomPrice);
+            updateCheckoutData(currentCustomPrice);
         }
 
-        function proceedToCheckoutDirect(name, price) {
-            document.getElementById('checkoutItemName').innerText = "Katalog: " + name;
-            updatePrices(price);
+        function buyDirect(name, price) {
+            document.getElementById('checkoutItemName').innerText = "Katalog Preset: " + name;
+            updateCheckoutData(price);
         }
 
-        function updatePrices(price) {
-            let str = `Rp ${price.toLocaleString('id-ID')}`;
-            document.getElementById('checkoutFinalPrice').innerText = str;
-            document.getElementById('paymentFinalPrice').innerText = str;
-            navTo('page-checkout');
+        function updateCheckoutData(price) {
+            let formatted = `Rp ${price.toLocaleString('id-ID')}`;
+            document.getElementById('checkoutFinalPrice').innerText = formatted;
+            document.getElementById('paymentFinalPrice').innerText = formatted;
+            navToPage('page-checkout');
         }
 
-        let timer;
+        // TIMER QRIS CONTROL
+        let intervalTimer;
         function startTimer() {
-            clearInterval(timer);
-            let t = 15 * 60;
-            const disp = document.getElementById('countdownTimer');
-            timer = setInterval(() => {
-                let m = Math.floor(t / 60); let s = t % 60;
-                disp.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-                if (t-- <= 0) { clearInterval(timer); disp.innerText = "EXPIRED"; }
+            clearInterval(intervalTimer);
+            let time = 15 * 60;
+            const display = document.getElementById('countdownTimer');
+            intervalTimer = setInterval(() => {
+                let m = Math.floor(time / 60); let s = t = time % 60;
+                display.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                if (time-- <= 0) { clearInterval(intervalTimer); display.innerText = "EXPIRED"; }
             }, 1000);
         }
 
-        function toggleChat() {
-            const menu = document.getElementById('chatMenu');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-        }
-
         window.onload = () => {
+            document.getElementById('globalBackBtn').style.visibility = 'hidden'; // Sembunyikan back di home awal
             filterPreset('Semua', document.querySelector('.tab-btn.active'));
             calculateCustomPrice();
         };
