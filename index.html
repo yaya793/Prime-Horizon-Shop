@@ -5,58 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EB | EditorBase Premium</title>
     <style>
-        /* [SISIPKAN KODE CSS ASLIMU DI SINI] */
-        /* Pastikan CSS untuk creator-selection-area dan counter-box tetap ada */
+        /* ... (KODE CSS MILIKMU TETAP SAMA DAN LENGKAP) ... */
+        /* Pastikan CSS, Navigasi, dan Struktur Page Section tetap utuh seperti di file aslimu */
     </style>
 </head>
 <body>
-
     <div id="page-custom" class="page-section">
-        <h2 class="title">Custom <span>Request</span></h2>
-        
-        <div class="creator-selection-area" id="creatorArea" style="display: block;">
-            <span style="font-size: 12px; font-weight: 700; color: #fff;">Pilih Arsitek Preset Kreator:</span>
-            <div class="creator-select-grid">
-                <div class="creator-chip" onclick="selectCreator(this, 'Hiro Wangyy')">
-                    <strong>Hiro Wangyy</strong><br><small>Master of Cinematic Flow & Velocity</small>
-                </div>
-                <div class="creator-chip" onclick="selectCreator(this, 'Frii Wangyy')">
-                    <strong>Frii Wangyy</strong><br><small>High-Energy Beat Sync Specialist</small>
-                </div>
-                <div class="creator-chip" onclick="selectCreator(this, 'DanNewbie')">
-                    <strong>DanNewbie</strong><br><small>Pro-level templates for Beginners</small>
-                </div>
-                <div class="creator-chip" onclick="selectCreator(this, 'Belum ada')">
-                    <strong>Belum ada</strong><br><small>New rising talent coming soon</small>
+        <div class="card">
+            <div class="creator-selection-area" id="creatorArea" style="display: none;">
+                <span style="font-size: 12px; font-weight: 700; color: #fff;">Pilih Arsitek Preset Kreator:</span>
+                <div class="creator-select-grid">
+                    <div class="creator-chip" onclick="selectCreator(this, 'Hiro Wangyy')">
+                        <strong>Hiro Wangyy</strong><br><small>Master of Smooth Velocity & Cinematic Flow</small>
+                    </div>
+                    <div class="creator-chip" onclick="selectCreator(this, 'Frii Wangyy')">
+                        <strong>Frii Wangyy</strong><br><small>Specialist in High-Energy Beat Sync Editing</small>
+                    </div>
+                    <div class="creator-chip" onclick="selectCreator(this, 'DanNewbie')">
+                        <strong>DanNewbie</strong><br><small>Beginner-Friendly templates with Pro-level look</small>
+                    </div>
+                    <div class="creator-chip" onclick="selectCreator(this, 'Belum ada')">
+                        <strong>Belum ada</strong><br><small>New talent joining the workspace soon</small>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="counter-box">
-            <div class="counter-controls">
-                <button class="c-btn" onclick="updateVideoCount(-1)">-</button>
-                <span id="qtyVideo">1</span>
-                <button class="c-btn" onclick="updateVideoCount(1)">+</button>
+            <span style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 5px; margin-top: 15px;">Jumlah Foto (Rp 1.000 / Foto)</span>
+            <div class="counter-box">
+                <div class="counter-controls">
+                    <button class="c-btn" onclick="updatePhotoCount(-1)">-</button>
+                    <span style="font-weight: 700; font-size: 18px;" id="qtyPhoto">0</span>
+                    <button class="c-btn" onclick="updatePhotoCount(1)">+</button>
+                </div>
             </div>
-            <div class="counter-controls">
-                <button class="c-btn" onclick="updatePhotoCount(-1)">-</button>
-                <span id="qtyPhoto">0</span>
-                <button class="c-btn" onclick="updatePhotoCount(1)">+</button>
+            
             </div>
-        </div>
-
-        </div>
+    </div>
 
     <script>
-        // [FUNGSI JS ASLIMU DISINI]
+        // Tambahkan variabel dan fungsi ini ke script milikmu
         let photoCount = 0;
+        let selectedCreatorName = "Belum dipilih";
+
         function updatePhotoCount(change) {
             photoCount = Math.max(0, photoCount + change);
             document.getElementById('qtyPhoto').innerText = photoCount;
             calculateCustomPrice();
         }
+
+        function selectCreator(element, name) {
+            document.querySelectorAll('.creator-chip').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedCreatorName = name;
+        }
+
+        // Update fungsi calculateCustomPrice milikmu:
+        function calculateCustomPrice() {
+            let qtyVideo = parseInt(document.getElementById('qtyVideo').innerText);
+            let qtyPhoto = parseInt(document.getElementById('qtyPhoto').innerText);
+            let is3D = document.getElementById('c_3d').checked;
+            let isCC = document.getElementById('c_cc').checked;
+
+            let total = (qtyVideo * 3000) + (qtyPhoto * 1000) + baseStylePrice;
+            if (is3D) total += 10000;
+            if (isCC) total += 5000;
+
+            currentCustomPrice = total;
+            document.getElementById('displayCustomPrice').innerHTML = `<span>Rp</span> ${total.toLocaleString('id-ID')}`;
+        }
         
-        // Pastikan calculateCustomPrice menyertakan (photoCount * 1000)
+        // ... (Script lainnya tetap utuh)
     </script>
 </body>
 </html>
